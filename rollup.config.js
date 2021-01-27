@@ -13,7 +13,8 @@ export default {
 	input: 'src/main.ts',
 	output: {
 		sourcemap: !production,
-		name: 'app',
+        name: 'app',
+        format: "iife",
 		file: 'build/assets/bundle.js'
 	},
 	plugins: [
