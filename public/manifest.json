@@ -1,14 +1,15 @@
 {
     "name": "Github star tags",
     "description": "Tags for github stars",
-    "version": "0.1",
+    "version": "0.0.1",
     "manifest_version": 3,
-    "permissions": ["storage", "activeTab", "scripting"],
+    "permissions": ["storage"],
     "content_scripts": [
         {
-          "matches": ["https://github.com/*tab=stars*"],
-          "css": ["./assets/bundle.css"],
-          "js": ["./assets/bundle.js"]
+            "matches": ["https://github.com/*tab=stars*"],
+            "css": ["./tags-app/tags-app.css"],
+            "js": ["./tags-app/tags-app.js"]
         }
-    ]
-  }
+    ],
+    "options_page": "./options-page/options-page.html"
+}
