@@ -1,7 +1,8 @@
 {
     "extends": "@tsconfig/svelte/tsconfig.json",
     "compilerOptions": {
-        "typeRoots": ["node_modules/@types"],
+        "moduleResolution": "Node",
+        "types": ["chrome", "svelte"]
     },
     "include": ["src/**/*"],
     "exclude": [

@@ -1,3 +1,5 @@
 <script lang="ts">
-	export let name: string;
+    import StorageProviderComponent from './providers/StorageProvider.svelte';
 </script>
+
+<StorageProviderComponent />

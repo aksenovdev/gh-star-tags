@@ -1,0 +1,57 @@
+:root {
+    --ghst-tag-height: 20px;
+    --ghst-tag-padding: 0 5px;
+
+    // Used vars (--color-text-primary, ...) defined on Github pages
+    // https://primer.style/css/
+    // Text colors
+    --ghst-color-text-primary: var(--color-text-primary);
+    --ghst-color-text-secondary: var(--color-text-secondary);
+    --ghst-color-text-tertiary: var(--color-text-tertiary);
+    --ghst-color-text-placeholder: var(--color-text-placeholder);
+    --ghst-color-text-disabled: var(--color-text-disabled);
+    --ghst-color-text-inverse: var(--color-text-inverse);
+    --ghst-color-text-link: var(--color-text-link);
+    --ghst-color-text-danger: var(--color-text-danger);
+    --ghst-color-text-success: var(--color-text-success);
+    --ghst-color-text-warning: var(--color-text-warning);
+
+    // Border colors
+    --ghst-color-border-primary: var(--color-border-primary);
+    --ghst-color-border-secondary: var(--color-border-secondary);
+    --ghst-color-border-tertiary: var(--color-border-tertiary);
+    --ghst-color-border-overlay: var(--color-border-overlay);
+    --ghst-color-border-inverse: var(--color-border-inverse);
+    --ghst-color-border-info: var(--color-border-info);
+    --ghst-color-border-danger: var(--color-border-danger);
+    --ghst-color-border-success: var(--color-border-success);
+    --ghst-color-border-warning: var(--color-border-warning);
+
+    // Icons colors
+    --ghst-color-icon-primary: var(--color-icon-primary);
+    --ghst-color-icon-secondary: var(--color-icon-secondary);
+    --ghst-color-icon-tertiary: var(--color-icon-tertiary);
+    --ghst-color-icon-info: var(--color-icon-info);
+    --ghst-color-icon-danger: var(--color-icon-danger);
+    --ghst-color-icon-success: var(--color-icon-success);
+    --ghst-color-icon-warning: var(--color-icon-warning);
+
+    // Backgrounds colors
+    --ghst-color-bg-canvas: var(--color-bg-canvas);
+    --ghst-color-bg-canvas-mobile: var(--color-bg-canvas-mobile);
+    --ghst-color-bg-canvas-inverse: var(--color-bg-canvas-inverse);
+    --ghst-color-bg-canvas-inset: var(--color-bg-canvas-inset);
+    --ghst-color-bg-primary: var(--color-bg-primary);
+    --ghst-color-bg-secondary: var(--color-bg-secondary);
+    --ghst-color-bg-tertiary: var(--color-bg-tertiary);
+    --ghst-color-bg-overlay: var(--color-bg-overlay);
+    --ghst-color-bg-backdrop: var(--color-bg-backdrop);
+    --ghst-color-bg-info: var(--color-bg-info);
+    --ghst-color-bg-info-inverse: var(--color-bg-info-inverse);
+    --ghst-color-bg-danger: var(--color-bg-danger);
+    --ghst-color-bg-danger-inverse: var(--color-bg-danger-inverse);
+    --ghst-color-bg-success: var(--color-bg-success);
+    --ghst-color-bg-success-inverse: var(--color-bg-success-inverse);
+    --ghst-color-bg-warning: var(--color-bg-warning);
+    --ghst-color-bg-warning-inverse: var(--color-bg-warning-inverse);
+}

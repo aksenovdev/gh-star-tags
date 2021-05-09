@@ -5,10 +5,12 @@ import css from 'rollup-plugin-css-only';
 import svelte from 'rollup-plugin-svelte';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
+import scss from 'rollup-plugin-scss'
+import json from '@rollup/plugin-json';
 
 const production = !process.env.ROLLUP_WATCH;
 
-export default {
+export default [{
     input: 'src/tags-app/main.ts',
     output: {
         sourcemap: !production,
@@ -24,6 +26,8 @@ export default {
                 dev: !production
             }
         }),
+        scss(),
+
         // we'll extract any component CSS out into
         // a separate file - better for performance
         css({ output: 'tags-app.css' }),
@@ -42,6 +46,7 @@ export default {
             sourceMap: !production,
             inlineSources: !production
         }),
+        json(),
 
         // If we're building for production (npm run build
         // instead of npm run dev), minify
@@ -50,4 +55,4 @@ export default {
     watch: {
         clearScreen: false
     }
-};
+}];

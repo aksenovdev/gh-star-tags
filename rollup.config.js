@@ -1,11 +1,11 @@
 import fse from 'fs-extra';
-import optionsPageConfig from './src/options-page/rollup.config';
-import tagsAppConfig from './src/tags-app/rollup.config';
+import optionsPageConfigs from './src/options-page/rollup.config';
+import tagsAppConfigs from './src/tags-app/rollup.config';
 
 fse.removeSync('./build');
 fse.copySync('./public', './build');
 
 export default [
-    tagsAppConfig,
-    optionsPageConfig
+    ...tagsAppConfigs,
+    ...optionsPageConfigs
 ];
