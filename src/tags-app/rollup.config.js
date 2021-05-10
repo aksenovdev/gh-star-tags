@@ -1,3 +1,4 @@
+import * as path from 'path';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
@@ -7,8 +8,10 @@ import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import scss from 'rollup-plugin-scss'
 import json from '@rollup/plugin-json';
+import alias from '@rollup/plugin-alias';
 
 const production = !process.env.ROLLUP_WATCH;
+const projectRootDir = path.resolve('../..');
 
 export default [{
     input: 'src/tags-app/main.ts',
@@ -47,6 +50,13 @@ export default [{
             inlineSources: !production
         }),
         json(),
+
+        alias({
+            entries: [
+                { find: "@tags-api", replacement: path.resolve(projectRootDir, 'src', 'tags-api') },
+                { find: "@storage-data", replacement: path.resolve(projectRootDir, 'src', 'storage-data') },
+            ]
+        }),
 
         // If we're building for production (npm run build
         // instead of npm run dev), minify

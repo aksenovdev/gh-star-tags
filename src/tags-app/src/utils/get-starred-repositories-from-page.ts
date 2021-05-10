@@ -1,31 +1,34 @@
-export type HolderKey = string;
-export interface StarredHolderSettings {
-    holderElSelector?: string;
-    createTagsTargetElement?: () => HTMLElement,
-    getHolderKey?: (holderEl: HTMLElement) => HolderKey
-};
-export interface HTMLStarredHolder {
-    key: HolderKey;
+import type { HolderData } from '../stores/tags-holder.store';
+
+export interface RepositoryHolderInfo {
+    data: HolderData;
     tagsSectionTargetElement: HTMLElement;
 }
 
-export const createDefaultTagsTargetElement: StarredHolderSettings['createTagsTargetElement']
-    = () => document.createElement('div');
-export const getHolderKeyFromEl: StarredHolderSettings['getHolderKey']
-    = (holderEl: HTMLElement) => holderEl.querySelector('h3 > a').getAttribute('href');
-export const getStarredHoldersFromPage: (settings?: StarredHolderSettings) => HTMLStarredHolder[]
-    = ({
-        holderElSelector = '.col-12.border-bottom',
-        getHolderKey = getHolderKeyFromEl,
-        createTagsTargetElement = createDefaultTagsTargetElement
-    } = {}) =>
-        Array.from(document.querySelectorAll(holderElSelector))
+const getHolderDataFromEl: (holderEl: HTMLElement) => HolderData
+    = (holderEl: HTMLElement) => {
+        const languageEl: HTMLElement = holderEl.querySelector('[itemprop="programmingLanguage"]');
+
+        return {
+            link: holderEl.querySelector('h3 > a').getAttribute('href'),
+            description: holderEl.querySelector('[itemprop="description"]')?.textContent || '',
+            lang: languageEl
+                ? {
+                    name: languageEl.textContent,
+                    color: getComputedStyle(languageEl.previousElementSibling).backgroundColor
+                }
+                : null,
+        };
+    };
+export const getTagsHoldersFromPage: () => RepositoryHolderInfo[]
+    = () =>
+        Array.from(document.querySelectorAll('.col-12.border-bottom'))
             .map((holderEl: HTMLElement) => {
-                const tagsSectionTargetElement: HTMLElement = createTagsTargetElement();
+                const tagsSectionTargetElement: HTMLElement =  document.createElement('div');
                 holderEl.appendChild(tagsSectionTargetElement);
 
                 return {
                     tagsSectionTargetElement,
-                    key: getHolderKey(holderEl)
+                    data: getHolderDataFromEl(holderEl)
                 };
             });

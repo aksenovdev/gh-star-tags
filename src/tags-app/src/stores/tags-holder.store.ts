@@ -1,6 +1,8 @@
 import type { Store, Event, Effect } from 'effector';
 import { createEffect, createEvent, createStore, forward } from 'effector';
-import type { TagsApi, Tag, TagsHolder } from '../../../tags-api/interfaces';
+import type { TagsApi, Tag, TagsHolder } from '@tags-api/interfaces';
+import type { TagCreateEventPayload, TagDeleteEventPayload } from './events';
+import { tagCreated, tagDeleted } from './events';
 
 export interface TagsHolderStore {
     tagsHolder$: Store<TagsHolder>;
@@ -8,28 +10,29 @@ export interface TagsHolderStore {
     addTagFx: Effect<Tag, TagsHolder>;
     removeTagFx: Effect<Tag, TagsHolder>;
     requestTagsHolderFx: Effect<void, TagsHolder>;
-    searchTagsFx: Effect<Tag, Tag[]>;
 }
+export type HolderData = Omit<TagsHolder, 'tags'>;
 
-export const createTagsHolderStoreFactory: (tagsApi: TagsApi) => (holderKey: string) => TagsHolderStore
+export const createTagsHolderStoreFactory: (tagsApi: TagsApi) => (holderData: HolderData) => TagsHolderStore
     = (tagsApi: TagsApi) => {
-        return (holderKey: string) => {
+        return ({ link, ...data }: HolderData) => {
             const setHolder: Event<TagsHolder> = createEvent('setTagHolder');
-            const searchTagsFx: Effect<Tag, Tag[]> = createEffect(
-                (search: string) => tagsApi.searchTags(search)
-            );
             const addTagFx: Effect<Tag, TagsHolder> = createEffect(
-                (tag: Tag) => tagsApi.addTagsToHolder(holderKey, [tag])
+                (tag: Tag) => tagsApi.addTagsToHolder(link, [tag])
             );
             const removeTagFx: Effect<Tag, TagsHolder> = createEffect(
-                (tag: Tag) => tagsApi.deleteTagsFromHolder(holderKey, [tag])
+                (tag: Tag) => tagsApi.deleteTagsFromHolder(link, [tag])
             );
             const requestTagsHolderFx: Effect<void, TagsHolder> = createEffect(
-                () => tagsApi.getHolderById(holderKey)
+                () => tagsApi.getHolderById(link)
                     .then(
                         (tagsHolder: TagsHolder) => tagsHolder
                             ? tagsHolder
-                            : tagsApi.createHolder({ repositoryKey: holderKey, tags: [] })
+                            : tagsApi.createHolder({
+                                ...data,
+                                link: link,
+                                tags: [],
+                            })
                     )
             );
 
@@ -46,12 +49,25 @@ export const createTagsHolderStoreFactory: (tagsApi: TagsApi) => (holderKey: str
                 ],
                 to: setHolder
             });
+            forward({
+                from: addTagFx.done.map(({ result, params }) => ({
+                    holder: result,
+                    tag: params
+                } as TagCreateEventPayload)),
+                to: tagCreated
+            });
+            forward({
+                from: removeTagFx.done.map(({ result, params }) => ({
+                    holder: result,
+                    tag: params
+                } as TagDeleteEventPayload)),
+                to: tagDeleted
+            });
 
             return {
                 addTagFx,
                 removeTagFx,
                 requestTagsHolderFx,
-                searchTagsFx,
                 tagsHolder$,
                 tags$
             }

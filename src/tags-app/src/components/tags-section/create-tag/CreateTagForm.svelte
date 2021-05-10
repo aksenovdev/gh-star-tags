@@ -3,9 +3,9 @@
     import OctionIcon from '../../common/OctionIcon.svelte';
 
     export let value: string = '';
+    export let opened: boolean = false;
     export { className as class }; let className: string = '';
     const dispatcher = createEventDispatcher();
-    let opened: boolean = false;
 
     const emitCreateTag: () => void
         = () => {

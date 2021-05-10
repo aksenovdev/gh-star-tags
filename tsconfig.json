@@ -2,7 +2,12 @@
     "extends": "@tsconfig/svelte/tsconfig.json",
     "compilerOptions": {
         "moduleResolution": "Node",
-        "types": ["chrome", "svelte"]
+        "types": ["chrome", "svelte"],
+        "baseUrl": "./",
+        "paths": {
+            "@tags-api/*": ["src/tags-api/*"],
+            "@storage-data": ["src/storage-data"],
+        }
     },
     "include": ["src/**/*"],
     "exclude": [

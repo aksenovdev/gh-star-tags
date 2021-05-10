@@ -5,7 +5,7 @@
 
 <style lang="scss">
     .tag-action {
-        min-width:  calc(var(--ghst-tag-height) - 1px); // - borders;
+        min-width: calc(var(--ghst-tag-height) - 1px); // - borders;
         height: 100%;
         display: flex;
         align-items: center;

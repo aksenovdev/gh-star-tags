@@ -4,14 +4,6 @@
      */
     export type OctionIconColor = 'primary' | 'secondary' | 'tertiary'
         | 'info' | 'danger' | 'success' | 'warning';
-
-    const htmlToElement: <T>(html: string) => T
-        = (html: string) => {
-            const template: HTMLTemplateElement = document.createElement('template');
-            template.innerHTML = html.trim();
-
-            return template.content.firstChild as any;
-        };
 </script>
 
 <script lang="ts">
@@ -28,7 +20,12 @@
 
     beforeUpdate(() => (prevClassName = className));
 
-    $: iconSvg = htmlToElement<SVGElement>(octions[icon].toSVG({ width, height }));
+    let iconSvg: SVGElement;
+    $: {
+        const template: HTMLTemplateElement = document.createElement('template');
+        template.innerHTML = octions[icon].toSVG({ width, height }).trim();
+        iconSvg = template.content.firstChild as any;
+    }
     $: iconSvg.setAttribute(
         'class',
         `${iconSvg.getAttribute('class').replace(prevClassName, '')} ${className || ''}`

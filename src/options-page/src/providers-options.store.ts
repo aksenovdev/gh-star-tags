@@ -1,11 +1,13 @@
 import type { Writable, Readable } from 'svelte/store';
 import { writable, get, derived } from 'svelte/store';
+import type { StorageData } from '@storage-data';
+import { getStorageData, updateStorageData } from '@storage-data';
 
-chrome.storage.sync
-    .get(({ providersOptions = [], ...otherOptions }: { providersOptions: [string, any][]; [x: string]: any; }) => {
-        setProvidersOptions(new Map(providersOptions));
+getStorageData()
+    .then(({ providersOptions }: StorageData) => {
+        setProvidersOptions(providersOptions);
         providersOptions$
-            .subscribe(($providersOptions: Map<string, any>) => (chrome.storage.sync.set({ providersOptions: Array.from($providersOptions), ...otherOptions })));
+            .subscribe((providersOptions: Map<string, any>) => updateStorageData({ providersOptions }))
     });
 export const providersOptions$: Writable<Map<string, any>> = writable(new Map());
 export const setProvidersOptions: (providersOptions: Map<string, any>) => void

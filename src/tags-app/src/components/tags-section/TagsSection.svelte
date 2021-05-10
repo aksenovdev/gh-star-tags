@@ -1,16 +1,19 @@
 <script lang="ts">
     import { setContext } from 'svelte';
     import type { Store } from 'effector';
-    import type { Tag } from '../../../../tags-api/interfaces';
+    import type { Tag } from '@tags-api/interfaces';
     import type { TagsHolderStore } from '../../stores/tags-holder.store';
-    import { TAGS_HOLDER_STORE_CONTEXT_KEY } from './tags-section.constants';
+    import type { TagsSearchStore } from '../../stores/tags-search.store';
+    import { TAGS_HOLDER_STORE_CONTEXT_KEY, TAGS_SEARCH_STORE_CONTEXT_KEY } from './tags-section.constants';
     import CreateTag from './create-tag/CreateTag.svelte';
     import RepositoryTag from './RepositoryTag.svelte';
 
     export let holderStore: TagsHolderStore;
+    export let searchStore: TagsSearchStore;
     const tags$: Store<Tag[]>  = holderStore.tags$;
 
     setContext(TAGS_HOLDER_STORE_CONTEXT_KEY, holderStore);
+    setContext(TAGS_SEARCH_STORE_CONTEXT_KEY, searchStore);
     holderStore.requestTagsHolderFx();
 </script>
 

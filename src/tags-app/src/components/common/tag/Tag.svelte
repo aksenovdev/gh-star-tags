@@ -10,7 +10,6 @@
     .tag {
         font-size: 12px;
         border-radius: 2px;
-        cursor: pointer;
         display: flex;
         align-items: stretch;
         white-space: nowrap;
@@ -32,7 +31,7 @@
     }
 </style>
 
-<div class="tag {className}" on:click>
+<div class="tag {className}">
     <div
         class="tag__text"
         on:click

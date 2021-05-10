@@ -8,21 +8,27 @@ export interface StorageProviderOptions {
 };
 
 class LocalStorageRepository {
-    private data: TagsHolder[] = []
-    private allTags: Tag[] = []
+    public get allHolders(): TagsHolder[] {
+        return this.holders;
+    }
+    public get allTags(): Tag[] {
+        return this.tags;
+    }
+    private holders: TagsHolder[] = [];
+    private tags: Tag[] = [];
 
     constructor(private readonly dataKey: string) {
         this.retrieveDataFromStorage();
     }
 
     public getTagsHolder(key: string): TagsHolder {
-        return cloneDeep(this.data.find(({ repositoryKey }: TagsHolder) => repositoryKey === key));
+        return cloneDeep(this.holders.find(({ link }: TagsHolder) => link === key));
     }
 
     public addTagsHolder(tagsHolder: TagsHolder): TagsHolder {
         tagsHolder.tags = tagsHolder.tags || [];
-        const updatedData: TagsHolder[] = this.data
-            .filter((holder: TagsHolder) => holder.repositoryKey !== tagsHolder.repositoryKey);
+        const updatedData: TagsHolder[] = this.holders
+            .filter((holder: TagsHolder) => holder.link !== tagsHolder.link);
         updatedData.push(tagsHolder);
         this.setData(updatedData);
 
@@ -30,38 +36,38 @@ class LocalStorageRepository {
     }
 
     public deleteTagsHolder(key: string): void {
-        const updatedData: TagsHolder[] = this.data
-            .filter((holder: TagsHolder) => holder.repositoryKey !== key);
+        const updatedData: TagsHolder[] = this.holders
+            .filter((holder: TagsHolder) => holder.link !== key);
         this.setData(updatedData);
     }
 
     public findTags(search: string): Tag[] {
         search = search.toLowerCase();
-        return this.allTags.filter((tag: Tag) => tag.toLowerCase().includes(search));
+        return this.tags.filter((tag: Tag) => tag.toLowerCase().includes(search));
     }
 
     public patchData(data: TagsHolder | TagsHolder[]): void {
         data = Array.isArray(data) ? data : [data];
         const dataMap: Map<string, TagsHolder> = new Map(
-            data.map((tagsHolder: TagsHolder) => [tagsHolder.repositoryKey, tagsHolder])
+            data.map((tagsHolder: TagsHolder) => [tagsHolder.link, tagsHolder])
         );
-        const updatedData: TagsHolder[] = this.data
+        const updatedData: TagsHolder[] = this.holders
             .map(
-                (tagsHolder: TagsHolder) => dataMap.has(tagsHolder.repositoryKey)
-                    ? dataMap.get(tagsHolder.repositoryKey)
+                (tagsHolder: TagsHolder) => dataMap.has(tagsHolder.link)
+                    ? dataMap.get(tagsHolder.link)
                     : tagsHolder
             );
         this.setData(updatedData);
     }
 
-    public setData(data: TagsHolder[] = this.data): void {
+    public setData(data: TagsHolder[] = this.holders): void {
         localStorage.setItem(this.dataKey, JSON.stringify(data));
         this.retrieveDataFromStorage();
     }
 
     private retrieveDataFromStorage(): void {
-        this.data = JSON.parse(localStorage.getItem(this.dataKey) || "[]");
-        this.allTags = uniq(flatMap(this.data.map(({ tags }: TagsHolder) => tags)));
+        this.holders = JSON.parse(localStorage.getItem(this.dataKey) || "[]");
+        this.tags = uniq(flatMap(this.holders.map(({ tags }: TagsHolder) => tags)));
     }
 }
 
@@ -110,8 +116,19 @@ class StorageTagsApiProvider implements TagsApi {
         }
     }
 
-    public async searchTags(search: string): Promise<string[]> {
+    public async searchTags(search: string): Promise<Tag[]> {
         return Promise.resolve(this.dataRepository.findTags(search));
+    }
+
+    public async searchHoldersByTags(tags: Tag[]): Promise<TagsHolder[]> {
+        return Promise.resolve(
+            this.dataRepository.allHolders
+                .filter((holder: TagsHolder) => tags.every((tag: Tag) => holder.tags.includes(tag)))
+        );
+    }
+
+    public async getAllTags(): Promise<Tag[]> {
+        return Promise.resolve(this.dataRepository.allTags);
     }
 }
 
